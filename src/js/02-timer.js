@@ -12,6 +12,7 @@ const refs = {
   datetimePicker: document.getElementById('datetime-picker'),
 
   start: document.querySelector('[data-start]'),
+  stop: document.querySelector('[data-stop]'),
 
   day: document.querySelector('[data-days]'),
   hour: document.querySelector('[data-hours]'),
@@ -30,21 +31,27 @@ refs.label.forEach(el => (el.style.display = 'block'));
 refs.field.forEach(el => (el.style.textAlign = 'center'));
 
 refs.start.disabled = true;
+refs.stop.disabled = true;
 
 let pickedDate = '';
+let intervalId = null;
 
 const timer = {
   start() {
     const startTime = pickedDate;
     refs.start.disabled = true;
-    setInterval(() => {
+    intervalId = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = convertTimeComponents(startTime - currentTime);
       updateTimer(deltaTime);
-      setInterval(() => {
-        refs.start.disabled = true;
-      }, 0);
+      refs.stop.disabled = false;
     }, 1000);
+  },
+
+  stop() {
+    clearInterval(intervalId);
+    updateTimer({ days: '00', hours: '00', mins: '00', secs: '00' });
+    refs.stop.disabled = true;
   },
 };
 
@@ -68,6 +75,7 @@ refs.datetimePicker.addEventListener('input', e => {
 });
 
 refs.start.addEventListener('click', timer.start);
+refs.stop.addEventListener('click', timer.stop);
 
 function updateTimer({ days, hours, mins, secs }) {
   refs.day.textContent = `${days}`;
