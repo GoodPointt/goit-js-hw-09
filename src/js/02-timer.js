@@ -7,6 +7,8 @@ const refs = {
 
   datetimePicker: document.getElementById('datetime-picker'),
 
+  start: document.querySelector('[data-start]'),
+
   days: document.querySelector('[data-days]'),
   hours: document.querySelector('[data-hours]'),
   minutes: document.querySelector('[data-minutes]'),
@@ -29,3 +31,9 @@ refs.datetimePicker.addEventListener('input', e => {
   pickedDate = e.currentTarget.value;
   console.log(pickedDate);
 });
+
+refs.start.addEventListener('click', onStartClick);
+
+function onStartClick() {
+  refs.start.disabled = true;
+}
