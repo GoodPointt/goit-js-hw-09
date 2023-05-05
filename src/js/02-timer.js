@@ -38,6 +38,7 @@ let intervalId = null;
 
 const timer = {
   start() {
+    Notiflix.Notify.success('Countdown started!');
     const startTime = pickedDate;
     refs.start.disabled = true;
     intervalId = setInterval(() => {
@@ -52,6 +53,8 @@ const timer = {
     clearInterval(intervalId);
     updateTimer({ days: '00', hours: '00', mins: '00', secs: '00' });
     refs.stop.disabled = true;
+    refs.datetimePicker.value = 'Choose date to countdown';
+    Notiflix.Notify.info('Please choose a date to start new countdown');
   },
 };
 
