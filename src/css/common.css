@@ -17,14 +17,14 @@ img {
   max-width: 100%;
 }
 
-.time {
+.timer {
   display: flex;
   gap: 15px;
 }
 
 .value {
   display: block;
-  font-size: 30px;
+  font-size: 50px;
 }
 
 .label {

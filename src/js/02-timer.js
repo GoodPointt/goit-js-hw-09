@@ -16,7 +16,7 @@ const refs = {
   second: document.querySelector('[data-seconds]'),
 };
 
-refs.start.disabled = false;
+// refs.start.disabled = false;
 refs.stop.disabled = true;
 
 let intervalId = null;
