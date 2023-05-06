@@ -17,18 +17,31 @@ function onClickCreatePromiseBtn(e) {
     return Notiflix.Notify.warning('Please enter correct value!');
   }
 
-  for (position = 0; position < amount; position += 1) {
-    createPromise(position, delay);
+  for (position = 1; position <= amount; position += 1) {
+    createPromise(position, delay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`
+        );
+      });
+    delay += step;
   }
 }
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-    Notiflix.Notify.success('YUEP!');
-  } else {
-    // Reject
-    Notiflix.Notify.failure('NOPE!');
-  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
 }
