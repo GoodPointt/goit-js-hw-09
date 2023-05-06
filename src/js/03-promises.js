@@ -1,6 +1,6 @@
 import Notiflix from 'notiflix';
 
-formRef = document.querySelector('.form');
+const formRef = document.querySelector('.form');
 
 let position = 0;
 
