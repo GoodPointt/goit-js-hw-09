@@ -3,10 +3,6 @@ import Notiflix from 'notiflix';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const refs = {
-  value: document.querySelectorAll('.value'),
-  label: document.querySelectorAll('.label'),
-  field: document.querySelectorAll('.field'),
-
   timer: document.querySelector('.timer'),
 
   datetimePicker: document.getElementById('datetime-picker'),
@@ -20,41 +16,33 @@ const refs = {
   second: document.querySelector('[data-seconds]'),
 };
 
-refs.timer.style.display = 'flex';
-refs.timer.style.gap = '15px';
-
-refs.value.forEach(el => {
-  el.style.display = 'block';
-  el.style.fontSize = '30px';
-});
-refs.label.forEach(el => (el.style.display = 'block'));
-refs.field.forEach(el => (el.style.textAlign = 'center'));
-
-refs.start.disabled = true;
+refs.start.disabled = false;
 refs.stop.disabled = true;
 
-let pickedDate = '';
 let intervalId = null;
 
 const timer = {
   start() {
-    Notiflix.Notify.success('Countdown started!');
-    const startTime = pickedDate;
+    const startTime = new Date(refs.datetimePicker.value).getTime();
     refs.start.disabled = true;
+
     intervalId = setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = convertTimeComponents(startTime - currentTime);
-      updateTimer(deltaTime);
+      const deltaTime = startTime - currentTime;
+      if (deltaTime < 0) return timer.stop();
+      convertedDeltaTime = convertTimeComponents(deltaTime);
+      updateTimer(convertedDeltaTime);
       refs.stop.disabled = false;
     }, 1000);
+    successMsg(intervalId, startTime);
   },
 
   stop() {
     clearInterval(intervalId);
-    updateTimer({ days: '00', hours: '00', mins: '00', secs: '00' });
     refs.stop.disabled = true;
     refs.datetimePicker.value = 'Choose date to countdown';
-    Notiflix.Notify.info('Please choose a date to start new countdown');
+    warningMsg();
+    updateTimer({ days: '00', hours: '00', mins: '00', secs: '00' });
   },
 };
 
@@ -64,8 +52,8 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] < new Date()) {
-      return Notiflix.Notify.failure('Please choose a date in the future');
+    if (selectedDates[0] < Date.now()) {
+      return warningMsg();
     }
     refs.start.disabled = false;
   },
@@ -73,9 +61,9 @@ const options = {
 
 flatpickr(refs.datetimePicker, options);
 
-refs.datetimePicker.addEventListener('input', e => {
-  pickedDate = new Date(e.currentTarget.value).getTime();
-});
+// refs.datetimePicker.addEventListener('input', e => {
+//   pickedDate =
+// });
 
 refs.start.addEventListener('click', timer.start);
 refs.stop.addEventListener('click', timer.stop);
@@ -117,4 +105,13 @@ function convertTimeComponents(timeInMilliseconds) {
   );
 
   return { days, hours, mins, secs };
+}
+
+function warningMsg() {
+  return Notiflix.Notify.warning('Please choose a date in the future');
+}
+
+function successMsg(id, startTime) {
+  if (id !== null && startTime - Date.now() > 0)
+    return Notiflix.Notify.success('Count down started!');
 }
