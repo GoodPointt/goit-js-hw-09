@@ -30,7 +30,7 @@ const timer = {
       const currentTime = Date.now();
       const deltaTime = startTime - currentTime;
       if (deltaTime < 0) return timer.stop();
-      convertedDeltaTime = convertTimeComponents(deltaTime);
+      const convertedDeltaTime = convertTimeComponents(deltaTime);
       updateTimer(convertedDeltaTime);
       refs.stop.disabled = false;
     }, 1000);
